@@ -12,6 +12,12 @@ CRAWFATHER_NPM_PACKAGE="${CRAWFATHER_NPM_PACKAGE:-crawfather}"
 CRAWFATHER_PIP_PACKAGE="${CRAWFATHER_PIP_PACKAGE:-crawfather}"
 OPENCLAW_NODE_BIN=""
 
+sanitize_npm_legacy_proxy_env(){
+  # Some environments inject deprecated npm keys that trigger noisy warnings.
+  # Keep installs deterministic by removing legacy forms and keeping standard proxy vars.
+  unset npm_config_http_proxy npm_config_https_proxy NPM_CONFIG_HTTP_PROXY NPM_CONFIG_HTTPS_PROXY
+}
+
 run(){
   if [ "$DRY_RUN" = "1" ]; then
     echo "DRY_RUN> $*"
@@ -85,6 +91,7 @@ install_openclaw(){
   else
     warn "Official installer blocked/unreachable. Falling back to npm global install."
     ensure_node_22 || return 1
+    sanitize_npm_legacy_proxy_env
     run "npm install -g openclaw@${OPENCLAW_VERSION}"
   fi
 
@@ -123,6 +130,7 @@ configure_openclaw(){
 try_install_crawfather_packages(){
   log "Attempting CrawFather package fallbacks"
 
+  sanitize_npm_legacy_proxy_env
   if npm view "$CRAWFATHER_NPM_PACKAGE" version >/dev/null 2>&1; then
     run "npm install -g \"$CRAWFATHER_NPM_PACKAGE\""
     log "Installed CrawFather via npm package: $CRAWFATHER_NPM_PACKAGE"

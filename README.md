@@ -333,6 +333,7 @@ npm run install:openclaw-crawfather:dry
 ### Installer behavior
 - Installs OpenClaw using the official script when reachable.
 - Falls back to `npm install -g openclaw@2026.2.15` when the official installer is blocked.
+- Clears legacy npm proxy env keys (`npm_config_http_proxy`/`npm_config_https_proxy`) before npm operations to avoid deprecated-config warnings in constrained environments.
 - Enforces Node 22 via `nvm` when needed (OpenClaw runtime requirement).
 - Runs non-interactive onboarding in local mode.
 - Clones/updates CrawFather from `https://github.com/EvezArt/CrawFather.git` and installs dependencies (`npm install` or `pip install -r requirements.txt`).
