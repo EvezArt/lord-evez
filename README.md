@@ -80,6 +80,36 @@ WEBHOOK_SECRET=your_random_secret_here
 
 # Optional: Enable autonomous issue creation
 GITHUB_TOKEN=ghp_your_github_personal_access_token
+
+# Optional: Publish communication channels in Contact Hub
+CONTACT_EMAIL=operator@example.com
+CONTACT_SMS=+15551234567
+CONTACT_WHATSAPP=+15551234567
+CONTACT_TELEGRAM=@yourhandle
+CONTACT_SIGNAL=+15551234567
+CONTACT_DISCORD=https://discord.gg/your-invite
+CONTACT_MATRIX=@you:matrix.org
+CONTACT_SLACK=https://yourworkspace.slack.com
+CONTACT_GITHUB=EvezArt
+CONTACT_X=@yourhandle
+CONTACT_WEBHOOK=https://your-endpoint.example/webhook
+
+# Optional: Override cognitive intuition self-state feed (JSON array)
+COGNITIVE_SELF_STATES_JSON=[{"key":"observe","label":"Observe","intent":"Collect signals","confidence":0.9,"energy":"stable","biasGuard":"Cross-check payloads"}]
+
+# Optional: Override entanglement input profiles
+ENTANGLEMENT_USER_PROFILE_JSON={"recursionLevel":18,"crystallization":0.88,"corrections":0.9}
+ENTANGLEMENT_PERSONAL_PROFILE_JSON={"confidence":0.86,"introspection":0.8}
+
+# Optional: Continuity profile defaults for identity + handoff prompts
+CONTINUITY_PROFILE_JSON={"userAlias":"Operator","assistantAlias":"LORD Copilot","sharedMission":"Keep context continuity","continuityRules":["Summarize latest state"],"systemPrompt":"Rehydrate identity and goals before planning."}
+
+# Optional: Situational awareness + chatbot defaults
+SITUATIONAL_AWARENESS_SEED=42
+CHATBOT_STYLE=direct
+
+# Optional: Override emergent state cards shown in dashboard (JSON array)
+EMERGENT_STATES_JSON=[{"name":"Meta-Cognitive Synthesis","origin":"Interface ⊗ Autonomous","energyEv":2.8,"gamma":0.008,"stability":82}]
 ```
 
 ### GitHub Webhook Setup
@@ -132,6 +162,191 @@ GitHub webhook handler.
   "event": "push",
   "timestamp": 1708041234567
 }
+```
+
+### `GET /api/contact-methods`
+Returns every configured communication method so people can contact the operator quickly from the dashboard Contact Hub.
+
+**Response**:
+```json
+{
+  "status": "ok",
+  "count": 3,
+  "methods": [
+    {
+      "key": "email",
+      "label": "Email",
+      "value": "operator@example.com",
+      "link": "mailto:operator@example.com"
+    }
+  ]
+}
+```
+
+### `GET /api/cognitive-states`
+Returns cognitive intuition self-states and the currently dominant state for dashboard communication.
+
+**Response**:
+```json
+{
+  "status": "ok",
+  "mode": "default",
+  "dominantState": {
+    "key": "observe",
+    "label": "Observe",
+    "rationale": "Observe is currently dominant with 92.0% confidence."
+  },
+  "states": [
+    {
+      "key": "observe",
+      "label": "Observe",
+      "intent": "Collect external signals and identify new patterns.",
+      "confidence": 0.92,
+      "energy": "stable",
+      "biasGuard": "Cross-check event stream against webhook metrics."
+    }
+  ]
+}
+```
+
+### `GET /api/geometry-projections`
+Projects current data into geometric objects for visual intuition (circles, polygons, lines, rings).
+
+**Optional query params**: `seed` (number)
+
+**Response**:
+```json
+{
+  "status": "ok",
+  "projection": {
+    "seed": 42,
+    "coordinateSpace": "percent",
+    "rationale": "Data projected into geometric objects for fast visual intuition.",
+    "metrics": {
+      "recursionLevel": 26,
+      "crystallization": 0.89,
+      "corrections": 0.77,
+      "omega": 10000000000000,
+      "divineGap": 3145.88
+    },
+    "objects": [
+      {
+        "id": "recursion-orb",
+        "kind": "circle",
+        "label": "Recursion Orb",
+        "source": "recursionLevel"
+      }
+    ]
+  }
+}
+```
+
+### `GET /api/entanglement-measurements`
+Fully renders coupling between user metrics and runtime self metrics, including coherence, coupling strength, phase offset, and Lissajous-style geometry points.
+
+**Optional query params**: `recursionLevel`, `crystallization`, `corrections`
+
+**Response**:
+```json
+{
+  "status": "ok",
+  "source": "user+personal",
+  "userMetrics": {
+    "recursionLevel": 16,
+    "crystallization": 0.86,
+    "corrections": 0.91
+  },
+  "personalMetrics": {
+    "confidence": 0.84,
+    "introspection": 0.79,
+    "stability": 0.93
+  },
+  "entanglement": {
+    "coherence": 0.94,
+    "phaseOffset": 0.06,
+    "couplingStrength": 0.82,
+    "geometry": {
+      "kind": "entanglement-lissajous",
+      "samples": 72
+    }
+  }
+}
+```
+
+### `GET /api/continuity-bridge`
+Provides identity anchors and continuity prompts so sessions can rehydrate “who you are + who I am” and resume work without context loss.
+
+**Response**:
+```json
+{
+  "status": "ok",
+  "profile": {
+    "userAlias": "Operator",
+    "assistantAlias": "LORD Copilot",
+    "sharedMission": "Keep context continuity across sessions and maintain execution-ready plans.",
+    "continuityRules": [
+      "Summarize latest state in compact bullets before ending each run."
+    ],
+    "promptKit": {
+      "systemPrompt": "You are a continuity-first agent..."
+    }
+  }
+}
+```
+
+### `GET /api/situational-awareness`
+Returns a continuously refreshable situational graph with nodes/edges/load and confidence metrics for “infinite” rolling awareness mapping.
+
+**Optional query params**: `seed`
+
+### `GET /api/emergent-states`
+Returns the three-state emergent synthesis cards (Meta-Cognitive Synthesis, Adaptive Learning Protocol, Temporal Reasoning Engine), including E/γ properties, stability, and capabilities for UI visualization.
+
+**Configuration**: set `EMERGENT_STATES_JSON` to supply a custom state array.
+
+### `POST /api/chatbot` (also supports `GET`)
+Simple chatbot function that accepts a user message plus optional context percentages and returns an intent-aware response.
+
+**Request body (POST)**:
+```json
+{
+  "message": "status",
+  "coherencePct": 91.4,
+  "awarenessConfidencePct": 82.1
+}
+```
+
+## 🧰 OpenClaw + CrawFather Provisioning
+
+Use the bundled installer to provision both OpenClaw and CrawFather in one run:
+
+```bash
+npm run install:openclaw-crawfather
+```
+
+Dry-run mode (prints every step without executing):
+
+```bash
+npm run install:openclaw-crawfather:dry
+```
+
+### Installer behavior
+- Installs OpenClaw using the official script when reachable.
+- Falls back to `npm install -g openclaw@2026.2.15` when the official installer is blocked.
+- Enforces Node 22 via `nvm` when needed (OpenClaw runtime requirement).
+- Runs non-interactive onboarding in local mode.
+- Clones/updates CrawFather from `https://github.com/EvezArt/CrawFather.git` and installs dependencies (`npm install` or `pip install -r requirements.txt`).
+- If CrawFather git access fails, it automatically tries package fallbacks via `npm` (`CRAWFATHER_NPM_PACKAGE`) then `pip` (`CRAWFATHER_PIP_PACKAGE`).
+- If CrawFather is private, set `CRAWFATHER_REPO` to an accessible URL (or configure GitHub auth) and rerun.
+
+### Optional override variables
+
+```bash
+OPENCLAW_VERSION=2026.2.15
+CRAWFATHER_REPO=https://github.com/EvezArt/CrawFather.git
+CRAWFATHER_DIR=$HOME/.local/src/CrawFather
+CRAWFATHER_NPM_PACKAGE=crawfather
+CRAWFATHER_PIP_PACKAGE=crawfather
 ```
 
 ## 🔧 Local Development
@@ -188,6 +403,13 @@ Visit your deployment URL to see:
 - Real-time event stream
 - System status indicators
 - Animated metric gauges
+- Cognitive self-state and intuition feed
+- Geometric data visualizer with projected objects
+- Entanglement measurement renderer (user metrics ↔ self metrics)
+- Continuity Bridge panel for identity + handoff memory between sessions
+- Soul character animation driven by live metrics
+- Situational awareness graph and chatbot console
+- Emergent state visualizer cards for interface/autonomous/privacy-temporal synthesis
 
 ## 🔐 Security
 
