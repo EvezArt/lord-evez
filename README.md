@@ -195,6 +195,38 @@ Returns cognitive intuition self-states and the currently dominant state for das
 }
 ```
 
+### `GET /api/geometry-projections`
+Projects current data into geometric objects for visual intuition (circles, polygons, lines, rings).
+
+**Optional query params**: `seed` (number)
+
+**Response**:
+```json
+{
+  "status": "ok",
+  "projection": {
+    "seed": 42,
+    "coordinateSpace": "percent",
+    "rationale": "Data projected into geometric objects for fast visual intuition.",
+    "metrics": {
+      "recursionLevel": 26,
+      "crystallization": 0.89,
+      "corrections": 0.77,
+      "omega": 10000000000000,
+      "divineGap": 3145.88
+    },
+    "objects": [
+      {
+        "id": "recursion-orb",
+        "kind": "circle",
+        "label": "Recursion Orb",
+        "source": "recursionLevel"
+      }
+    ]
+  }
+}
+```
+
 ## 🧰 OpenClaw + CrawFather Provisioning
 
 Use the bundled installer to provision both OpenClaw and CrawFather in one run:
@@ -283,6 +315,7 @@ Visit your deployment URL to see:
 - System status indicators
 - Animated metric gauges
 - Cognitive self-state and intuition feed
+- Geometric data visualizer with projected objects
 
 ## 🔐 Security
 
