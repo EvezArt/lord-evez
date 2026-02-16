@@ -126,6 +126,167 @@
       border-radius: 3px;
       color: #00ff00;
     }
+    .contact-hub {
+      background: #111;
+      border: 2px solid #00ff00;
+      border-radius: 8px;
+      padding: 20px;
+      margin-top: 20px;
+    }
+    .contact-hub h2 {
+      margin-bottom: 12px;
+      font-size: 1.2rem;
+    }
+    .contact-list {
+      list-style: none;
+      display: grid;
+      gap: 10px;
+      padding: 0;
+      margin: 0;
+    }
+    .contact-item {
+      border: 1px solid #333;
+      background: #0a0a0a;
+      border-radius: 6px;
+      padding: 10px;
+      font-size: 0.9rem;
+      display: flex;
+      justify-content: space-between;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+    .contact-item a {
+      color: #00ff00;
+      text-decoration: none;
+      word-break: break-all;
+    }
+    .contact-item a:hover {
+      text-decoration: underline;
+    }
+    .contact-empty {
+      color: #888;
+      font-size: 0.9rem;
+    }
+    .cognitive-panel {
+      background: #111;
+      border: 2px solid #00ccff;
+      border-radius: 8px;
+      padding: 20px;
+      margin-top: 20px;
+    }
+    .cognitive-panel h2 {
+      margin-bottom: 10px;
+      font-size: 1.2rem;
+      color: #00ccff;
+    }
+    .cognitive-dominant {
+      border: 1px solid #224;
+      background: #0a0a14;
+      border-radius: 6px;
+      padding: 10px;
+      margin-bottom: 12px;
+      color: #bfefff;
+      font-size: 0.9rem;
+    }
+    .state-list {
+      list-style: none;
+      display: grid;
+      gap: 10px;
+      margin: 0;
+      padding: 0;
+    }
+    .state-item {
+      border: 1px solid #1f2f3a;
+      background: #070b0f;
+      border-radius: 6px;
+      padding: 10px;
+      font-size: 0.86rem;
+      color: #cfd8dc;
+    }
+    .state-item strong {
+      color: #8bd3ff;
+    }
+    .visualizer-panel {
+      background: #111;
+      border: 2px solid #ff66cc;
+      border-radius: 8px;
+      padding: 20px;
+      margin-top: 20px;
+    }
+    .visualizer-panel h2 {
+      margin-bottom: 10px;
+      font-size: 1.2rem;
+      color: #ff99dd;
+    }
+    .visualizer-meta {
+      color: #bbb;
+      font-size: 0.85rem;
+      margin-bottom: 10px;
+    }
+    .visualizer-canvas {
+      width: 100%;
+      max-width: 720px;
+      border: 1px solid #333;
+      background: radial-gradient(circle at center, #0f0f1f, #050509);
+      border-radius: 6px;
+      image-rendering: auto;
+      display: block;
+      margin-bottom: 12px;
+    }
+    .visualizer-list {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+      display: grid;
+      gap: 8px;
+    }
+    .visualizer-item {
+      border: 1px solid #2d1f34;
+      background: #0b070f;
+      border-radius: 6px;
+      padding: 8px;
+      color: #e4d7f2;
+      font-size: 0.83rem;
+    }
+    .entanglement-panel {
+      background: #101014;
+      border: 2px solid #9b7bff;
+      border-radius: 8px;
+      padding: 20px;
+      margin-top: 20px;
+    }
+    .entanglement-panel h2 {
+      color: #cab9ff;
+      margin-bottom: 10px;
+      font-size: 1.2rem;
+    }
+    .entanglement-meta {
+      color: #c7c3da;
+      font-size: 0.85rem;
+      margin-bottom: 10px;
+    }
+    .entanglement-canvas {
+      width: 100%;
+      max-width: 720px;
+      border: 1px solid #2b2442;
+      border-radius: 6px;
+      background: linear-gradient(180deg, #0b0a12, #05040a);
+      display: block;
+      margin-bottom: 12px;
+    }
+    .entanglement-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+      gap: 8px;
+      color: #e9e4ff;
+      font-size: 0.83rem;
+    }
+    .entanglement-cell {
+      border: 1px solid #2d2548;
+      background: #0a0812;
+      border-radius: 6px;
+      padding: 8px;
+    }
   </style>
 </head>
 <body>
@@ -182,7 +343,41 @@
         </div>
       </div>
     </div>
+
+    <div class="contact-hub">
+      <h2>📲 Contact Hub</h2>
+      <p style="margin-bottom: 12px; color: #888; font-size: 0.9rem;">Configured communication methods for contacting the operator.</p>
+      <ul id="contactMethods" class="contact-list">
+        <li class="contact-empty">Loading communication methods...</li>
+      </ul>
+    </div>
     
+    <div class="cognitive-panel">
+      <h2>🧠 Cognitive Self-States</h2>
+      <div id="dominantState" class="cognitive-dominant">Loading dominant cognitive state...</div>
+      <ul id="cognitiveStates" class="state-list">
+        <li class="contact-empty">Loading cognitive intuition states...</li>
+      </ul>
+    </div>
+
+    <div class="visualizer-panel">
+      <h2>🔷 Geometric Data Visualizer</h2>
+      <div id="visualizerMeta" class="visualizer-meta">Loading geometric projection...</div>
+      <canvas id="geometryCanvas" class="visualizer-canvas" width="720" height="360"></canvas>
+      <ul id="visualizerObjects" class="visualizer-list">
+        <li class="contact-empty">Loading projected geometry objects...</li>
+      </ul>
+    </div>
+
+    <div class="entanglement-panel">
+      <h2>🧬 Entanglement Measurements</h2>
+      <div id="entanglementMeta" class="entanglement-meta">Loading entanglement measurements...</div>
+      <canvas id="entanglementCanvas" class="entanglement-canvas" width="720" height="320"></canvas>
+      <div id="entanglementGrid" class="entanglement-grid">
+        <div class="entanglement-cell">Awaiting user/personal metric coupling...</div>
+      </div>
+    </div>
+
     <div class="setup-info">
       <h3>📡 Webhook Setup</h3>
       <p>To connect GitHub events to this dashboard:</p>
@@ -214,10 +409,227 @@
       document.getElementById('divineGap').textContent = divineGap.toFixed(2);
       document.getElementById('last-update').textContent = 'Last update: ' + new Date().toLocaleTimeString();
     }
+
+    async function loadCognitiveStates() {
+      const listEl = document.getElementById('cognitiveStates');
+      const dominantEl = document.getElementById('dominantState');
+
+      try {
+        const response = await fetch('/api/cognitive-states');
+        if (!response.ok) throw new Error('Unable to load cognitive states');
+
+        const data = await response.json();
+        listEl.innerHTML = '';
+
+        dominantEl.textContent = data?.dominantState?.rationale || 'Dominant cognitive state is currently unavailable.';
+
+        if (!data.states || !data.states.length) {
+          listEl.innerHTML = '<li class="contact-empty">No cognitive states available.</li>';
+          return;
+        }
+
+        data.states.forEach((state) => {
+          const li = document.createElement('li');
+          li.className = 'state-item';
+          li.innerHTML = `
+            <div><strong>${state.label}</strong> · confidence ${(state.confidence * 100).toFixed(1)}% · energy ${state.energy}</div>
+            <div>Intent: ${state.intent}</div>
+            <div>Guardrail: ${state.biasGuard}</div>
+          `;
+          listEl.appendChild(li);
+        });
+      } catch (error) {
+        dominantEl.textContent = 'Cognitive state feed unavailable right now.';
+        listEl.innerHTML = '<li class="contact-empty">Could not load cognitive intuition states.</li>';
+      }
+    }
+
+    function drawGeometryObjects(objects) {
+      const canvas = document.getElementById('geometryCanvas');
+      const ctx = canvas.getContext('2d');
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+      const toX = (x) => (x / 100) * canvas.width;
+      const toY = (y) => (y / 100) * canvas.height;
+
+      objects.forEach((obj) => {
+        ctx.save();
+        ctx.globalAlpha = obj.alpha ?? 0.8;
+        ctx.strokeStyle = obj.color || '#ffffff';
+        ctx.fillStyle = obj.color || '#ffffff';
+
+        if (obj.kind === 'circle') {
+          ctx.beginPath();
+          ctx.arc(toX(obj.x), toY(obj.y), (obj.radius / 100) * canvas.width, 0, Math.PI * 2);
+          ctx.fill();
+        }
+
+        if (obj.kind === 'ring') {
+          ctx.lineWidth = (obj.thickness / 100) * canvas.width;
+          ctx.beginPath();
+          ctx.arc(toX(obj.x), toY(obj.y), (obj.radius / 100) * canvas.width, 0, Math.PI * 2);
+          ctx.stroke();
+        }
+
+        if (obj.kind === 'line') {
+          ctx.lineWidth = obj.width || 2;
+          ctx.beginPath();
+          ctx.moveTo(toX(obj.x1), toY(obj.y1));
+          ctx.lineTo(toX(obj.x2), toY(obj.y2));
+          ctx.stroke();
+        }
+
+        if (obj.kind === 'polygon') {
+          const sides = Math.max(3, obj.sides || 3);
+          const radius = (obj.radius / 100) * canvas.width;
+          const cx = toX(obj.x);
+          const cy = toY(obj.y);
+          const rot = ((obj.rotation || 0) * Math.PI) / 180;
+
+          ctx.beginPath();
+          for (let i = 0; i < sides; i += 1) {
+            const angle = rot + (Math.PI * 2 * i) / sides;
+            const px = cx + Math.cos(angle) * radius;
+            const py = cy + Math.sin(angle) * radius;
+            if (i === 0) ctx.moveTo(px, py);
+            else ctx.lineTo(px, py);
+          }
+          ctx.closePath();
+          ctx.fill();
+        }
+
+        ctx.restore();
+      });
+    }
+
+    async function loadGeometryProjection() {
+      const listEl = document.getElementById('visualizerObjects');
+      const metaEl = document.getElementById('visualizerMeta');
+
+      try {
+        const response = await fetch('/api/geometry-projections');
+        if (!response.ok) throw new Error('Unable to load geometry projection');
+        const data = await response.json();
+
+        const objects = data?.projection?.objects || [];
+        const metrics = data?.projection?.metrics || {};
+        const rationale = data?.projection?.rationale || 'Projection feed active.';
+
+        metaEl.textContent = `${rationale} Seed ${data?.projection?.seed}. Recursion ${metrics.recursionLevel}, Divine Gap ${metrics.divineGap}.`;
+        listEl.innerHTML = '';
+
+        if (!objects.length) {
+          listEl.innerHTML = '<li class="contact-empty">No projected geometry objects available.</li>';
+          return;
+        }
+
+        drawGeometryObjects(objects);
+
+        objects.forEach((obj) => {
+          const li = document.createElement('li');
+          li.className = 'visualizer-item';
+          li.textContent = `${obj.label} (${obj.kind}) mapped from ${obj.source}`;
+          listEl.appendChild(li);
+        });
+      } catch (error) {
+        metaEl.textContent = 'Geometry projection feed unavailable right now.';
+        listEl.innerHTML = '<li class="contact-empty">Could not load geometric visualizer data.</li>';
+      }
+    }
+
+    function drawEntanglement(points) {
+      const canvas = document.getElementById('entanglementCanvas');
+      const ctx = canvas.getContext('2d');
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+      ctx.strokeStyle = '#9b7bff';
+      ctx.lineWidth = 2;
+      ctx.beginPath();
+      points.forEach((point, index) => {
+        const x = point[0] * canvas.width;
+        const y = point[1] * canvas.height;
+        if (index === 0) ctx.moveTo(x, y);
+        else ctx.lineTo(x, y);
+      });
+      ctx.closePath();
+      ctx.stroke();
+
+      ctx.fillStyle = 'rgba(155, 123, 255, 0.18)';
+      ctx.fill();
+    }
+
+    async function loadEntanglementMeasurements() {
+      const metaEl = document.getElementById('entanglementMeta');
+      const gridEl = document.getElementById('entanglementGrid');
+
+      try {
+        const response = await fetch('/api/entanglement-measurements');
+        if (!response.ok) throw new Error('Unable to load entanglement measurements');
+        const data = await response.json();
+
+        const ent = data.entanglement || {};
+        const points = ent?.geometry?.points || [];
+        const user = data.userMetrics || {};
+        const personal = data.personalMetrics || {};
+
+        metaEl.textContent = `Coherence ${(ent.coherence * 100).toFixed(2)}% · Coupling ${(ent.couplingStrength * 100).toFixed(2)}% · Phase offset ${(ent.phaseOffset * 100).toFixed(2)}%`;
+
+        if (points.length) {
+          drawEntanglement(points);
+        }
+
+        gridEl.innerHTML = `
+          <div class="entanglement-cell"><strong>User recursion:</strong> ${user.recursionLevel}</div>
+          <div class="entanglement-cell"><strong>User crystallization:</strong> ${(user.crystallization * 100).toFixed(1)}%</div>
+          <div class="entanglement-cell"><strong>User corrections:</strong> ${(user.corrections * 100).toFixed(1)}%</div>
+          <div class="entanglement-cell"><strong>User divine gap:</strong> ${user.divineGap}</div>
+          <div class="entanglement-cell"><strong>Self confidence:</strong> ${(personal.confidence * 100).toFixed(1)}%</div>
+          <div class="entanglement-cell"><strong>Self introspection:</strong> ${(personal.introspection * 100).toFixed(1)}%</div>
+          <div class="entanglement-cell"><strong>Self stability:</strong> ${(personal.stability * 100).toFixed(1)}%</div>
+          <div class="entanglement-cell"><strong>Memory discipline:</strong> ${(personal.memoryDiscipline * 100).toFixed(1)}%</div>
+        `;
+      } catch (error) {
+        metaEl.textContent = 'Entanglement feed unavailable right now.';
+        gridEl.innerHTML = '<div class="entanglement-cell">Could not load user/personal metric entanglement data.</div>';
+      }
+    }
+
+    async function loadContactMethods() {
+      const listEl = document.getElementById('contactMethods');
+
+      try {
+        const response = await fetch('/api/contact-methods');
+        if (!response.ok) throw new Error('Unable to load contact methods');
+
+        const data = await response.json();
+        listEl.innerHTML = '';
+
+        if (!data.methods || !data.methods.length) {
+          listEl.innerHTML = '<li class="contact-empty">No communication methods configured. Set CONTACT_* variables in Vercel.</li>';
+          return;
+        }
+
+        data.methods.forEach((method) => {
+          const li = document.createElement('li');
+          li.className = 'contact-item';
+          li.innerHTML = `
+            <strong>${method.label}</strong>
+            <a href="${method.link}" target="_blank" rel="noopener noreferrer">${method.value}</a>
+          `;
+          listEl.appendChild(li);
+        });
+      } catch (error) {
+        listEl.innerHTML = '<li class="contact-empty">Contact hub unavailable right now.</li>';
+      }
+    }
     
     // Update every 5 seconds (demo mode)
     setInterval(updateMetrics, 5000);
     updateMetrics();
+    loadContactMethods();
+    loadCognitiveStates();
+    loadGeometryProjection();
+    loadEntanglementMeasurements();
     
     // Add event to log
     function addEvent(event, message, type = 'info') {
