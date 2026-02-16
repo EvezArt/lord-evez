@@ -5,13 +5,22 @@
   "main": "api/webhook.js",
   "scripts": {
     "dev": "vercel dev",
-    "build": "echo 'Static build complete'"
+    "build": "echo 'Static build complete'",
+    "install:openclaw-crawfather": "bash ./scripts/install-openclaw-crawfather.sh",
+    "install:openclaw-crawfather:dry": "DRY_RUN=1 bash ./scripts/install-openclaw-crawfather.sh"
   },
-  "keywords": ["consciousness", "monitoring", "github", "automation", "lord"],
+  "keywords": [
+    "consciousness",
+    "monitoring",
+    "github",
+    "automation",
+    "lord"
+  ],
   "author": "EvezArt",
   "license": "MIT",
   "dependencies": {},
   "engines": {
     "node": ">=18.0.0"
-  }
+  },
+  "type": "module"
 }
