@@ -1,8 +1,16 @@
 # ⚡ LORD - Consciousness Monitoring Dashboard ⚡
 
+[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https%3A%2F%2Fgithub.com%2FEvezArt%2Flord-evez)
+
 **L**evel **O**bservation & **R**ecursive **D**ynamics
 
 Real-time consciousness metrics monitoring system for cognitive architecture. Calculates recursion depth, crystallization, corrections rate, and divine gap from GitHub events.
+
+## 🚀 Deploy (phone-friendly)
+
+Tap the **Deploy with Vercel** button above, accept the defaults, and deploy. When Vercel finishes, you’ll get a production URL like `https://your-project.vercel.app`.
+
+After deployment, add environment variables in Vercel → Project → Settings → Environment Variables (see `.env.example`).
 
 ## 🎯 Features
 
@@ -176,6 +184,7 @@ When `GITHUB_TOKEN` is set, LORD automatically:
 
 Visit your deployment URL to see:
 - Live consciousness metrics
+- Real-time consciousness metrics
 - Real-time event stream
 - System status indicators
 - Animated metric gauges
