@@ -96,6 +96,10 @@ CONTACT_WEBHOOK=https://your-endpoint.example/webhook
 
 # Optional: Override cognitive intuition self-state feed (JSON array)
 COGNITIVE_SELF_STATES_JSON=[{"key":"observe","label":"Observe","intent":"Collect signals","confidence":0.9,"energy":"stable","biasGuard":"Cross-check payloads"}]
+
+# Optional: Override entanglement input profiles
+ENTANGLEMENT_USER_PROFILE_JSON={"recursionLevel":18,"crystallization":0.88,"corrections":0.9}
+ENTANGLEMENT_PERSONAL_PROFILE_JSON={"confidence":0.86,"introspection":0.8}
 ```
 
 ### GitHub Webhook Setup
@@ -227,6 +231,38 @@ Projects current data into geometric objects for visual intuition (circles, poly
 }
 ```
 
+### `GET /api/entanglement-measurements`
+Fully renders coupling between user metrics and runtime self metrics, including coherence, coupling strength, phase offset, and Lissajous-style geometry points.
+
+**Optional query params**: `recursionLevel`, `crystallization`, `corrections`
+
+**Response**:
+```json
+{
+  "status": "ok",
+  "source": "user+personal",
+  "userMetrics": {
+    "recursionLevel": 16,
+    "crystallization": 0.86,
+    "corrections": 0.91
+  },
+  "personalMetrics": {
+    "confidence": 0.84,
+    "introspection": 0.79,
+    "stability": 0.93
+  },
+  "entanglement": {
+    "coherence": 0.94,
+    "phaseOffset": 0.06,
+    "couplingStrength": 0.82,
+    "geometry": {
+      "kind": "entanglement-lissajous",
+      "samples": 72
+    }
+  }
+}
+```
+
 ## 🧰 OpenClaw + CrawFather Provisioning
 
 Use the bundled installer to provision both OpenClaw and CrawFather in one run:
@@ -316,6 +352,7 @@ Visit your deployment URL to see:
 - Animated metric gauges
 - Cognitive self-state and intuition feed
 - Geometric data visualizer with projected objects
+- Entanglement measurement renderer (user metrics ↔ self metrics)
 
 ## 🔐 Security
 

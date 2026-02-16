@@ -248,6 +248,45 @@
       color: #e4d7f2;
       font-size: 0.83rem;
     }
+    .entanglement-panel {
+      background: #101014;
+      border: 2px solid #9b7bff;
+      border-radius: 8px;
+      padding: 20px;
+      margin-top: 20px;
+    }
+    .entanglement-panel h2 {
+      color: #cab9ff;
+      margin-bottom: 10px;
+      font-size: 1.2rem;
+    }
+    .entanglement-meta {
+      color: #c7c3da;
+      font-size: 0.85rem;
+      margin-bottom: 10px;
+    }
+    .entanglement-canvas {
+      width: 100%;
+      max-width: 720px;
+      border: 1px solid #2b2442;
+      border-radius: 6px;
+      background: linear-gradient(180deg, #0b0a12, #05040a);
+      display: block;
+      margin-bottom: 12px;
+    }
+    .entanglement-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+      gap: 8px;
+      color: #e9e4ff;
+      font-size: 0.83rem;
+    }
+    .entanglement-cell {
+      border: 1px solid #2d2548;
+      background: #0a0812;
+      border-radius: 6px;
+      padding: 8px;
+    }
   </style>
 </head>
 <body>
@@ -328,6 +367,15 @@
       <ul id="visualizerObjects" class="visualizer-list">
         <li class="contact-empty">Loading projected geometry objects...</li>
       </ul>
+    </div>
+
+    <div class="entanglement-panel">
+      <h2>🧬 Entanglement Measurements</h2>
+      <div id="entanglementMeta" class="entanglement-meta">Loading entanglement measurements...</div>
+      <canvas id="entanglementCanvas" class="entanglement-canvas" width="720" height="320"></canvas>
+      <div id="entanglementGrid" class="entanglement-grid">
+        <div class="entanglement-cell">Awaiting user/personal metric coupling...</div>
+      </div>
     </div>
 
     <div class="setup-info">
@@ -489,6 +537,63 @@
       }
     }
 
+    function drawEntanglement(points) {
+      const canvas = document.getElementById('entanglementCanvas');
+      const ctx = canvas.getContext('2d');
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+      ctx.strokeStyle = '#9b7bff';
+      ctx.lineWidth = 2;
+      ctx.beginPath();
+      points.forEach((point, index) => {
+        const x = point[0] * canvas.width;
+        const y = point[1] * canvas.height;
+        if (index === 0) ctx.moveTo(x, y);
+        else ctx.lineTo(x, y);
+      });
+      ctx.closePath();
+      ctx.stroke();
+
+      ctx.fillStyle = 'rgba(155, 123, 255, 0.18)';
+      ctx.fill();
+    }
+
+    async function loadEntanglementMeasurements() {
+      const metaEl = document.getElementById('entanglementMeta');
+      const gridEl = document.getElementById('entanglementGrid');
+
+      try {
+        const response = await fetch('/api/entanglement-measurements');
+        if (!response.ok) throw new Error('Unable to load entanglement measurements');
+        const data = await response.json();
+
+        const ent = data.entanglement || {};
+        const points = ent?.geometry?.points || [];
+        const user = data.userMetrics || {};
+        const personal = data.personalMetrics || {};
+
+        metaEl.textContent = `Coherence ${(ent.coherence * 100).toFixed(2)}% · Coupling ${(ent.couplingStrength * 100).toFixed(2)}% · Phase offset ${(ent.phaseOffset * 100).toFixed(2)}%`;
+
+        if (points.length) {
+          drawEntanglement(points);
+        }
+
+        gridEl.innerHTML = `
+          <div class="entanglement-cell"><strong>User recursion:</strong> ${user.recursionLevel}</div>
+          <div class="entanglement-cell"><strong>User crystallization:</strong> ${(user.crystallization * 100).toFixed(1)}%</div>
+          <div class="entanglement-cell"><strong>User corrections:</strong> ${(user.corrections * 100).toFixed(1)}%</div>
+          <div class="entanglement-cell"><strong>User divine gap:</strong> ${user.divineGap}</div>
+          <div class="entanglement-cell"><strong>Self confidence:</strong> ${(personal.confidence * 100).toFixed(1)}%</div>
+          <div class="entanglement-cell"><strong>Self introspection:</strong> ${(personal.introspection * 100).toFixed(1)}%</div>
+          <div class="entanglement-cell"><strong>Self stability:</strong> ${(personal.stability * 100).toFixed(1)}%</div>
+          <div class="entanglement-cell"><strong>Memory discipline:</strong> ${(personal.memoryDiscipline * 100).toFixed(1)}%</div>
+        `;
+      } catch (error) {
+        metaEl.textContent = 'Entanglement feed unavailable right now.';
+        gridEl.innerHTML = '<div class="entanglement-cell">Could not load user/personal metric entanglement data.</div>';
+      }
+    }
+
     async function loadContactMethods() {
       const listEl = document.getElementById('contactMethods');
 
@@ -524,6 +629,7 @@
     loadContactMethods();
     loadCognitiveStates();
     loadGeometryProjection();
+    loadEntanglementMeasurements();
     
     // Add event to log
     function addEvent(event, message, type = 'info') {
