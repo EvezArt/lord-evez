@@ -137,7 +137,7 @@ try_install_crawfather_packages(){
 
   warn "No accessible CrawFather package source found in npm or pip registries."
   warn "Provide an accessible Git repo via CRAWFATHER_REPO or set CRAWFATHER_NPM_PACKAGE/CRAWFATHER_PIP_PACKAGE."
-  return 0
+  return 1
 }
 
 install_crawfather(){
@@ -153,7 +153,10 @@ install_crawfather(){
     if ! run "git clone \"$CRAWFATHER_REPO\" \"$CRAWFATHER_DIR\""; then
       warn "Unable to clone CrawFather from $CRAWFATHER_REPO (private repo or auth required)."
       warn "Set CRAWFATHER_REPO to an accessible URL or configure GitHub credentials, then rerun."
-      try_install_crawfather_packages
+      if ! try_install_crawfather_packages; then
+        warn "CrawFather installation failed: clone fallback and package fallbacks were unavailable."
+        return 1
+      fi
       return 0
     fi
   else
@@ -173,7 +176,10 @@ install_crawfather(){
   fi
 
   warn "CrawFather repo available but no package.json or requirements.txt found."
-  try_install_crawfather_packages
+  if ! try_install_crawfather_packages; then
+    warn "CrawFather installation failed: repository content was incomplete and no package fallbacks succeeded."
+    return 1
+  fi
 }
 
 main(){
