@@ -126,6 +126,86 @@
       border-radius: 3px;
       color: #00ff00;
     }
+    .contact-hub {
+      background: #111;
+      border: 2px solid #00ff00;
+      border-radius: 8px;
+      padding: 20px;
+      margin-top: 20px;
+    }
+    .contact-hub h2 {
+      margin-bottom: 12px;
+      font-size: 1.2rem;
+    }
+    .contact-list {
+      list-style: none;
+      display: grid;
+      gap: 10px;
+      padding: 0;
+      margin: 0;
+    }
+    .contact-item {
+      border: 1px solid #333;
+      background: #0a0a0a;
+      border-radius: 6px;
+      padding: 10px;
+      font-size: 0.9rem;
+      display: flex;
+      justify-content: space-between;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+    .contact-item a {
+      color: #00ff00;
+      text-decoration: none;
+      word-break: break-all;
+    }
+    .contact-item a:hover {
+      text-decoration: underline;
+    }
+    .contact-empty {
+      color: #888;
+      font-size: 0.9rem;
+    }
+    .cognitive-panel {
+      background: #111;
+      border: 2px solid #00ccff;
+      border-radius: 8px;
+      padding: 20px;
+      margin-top: 20px;
+    }
+    .cognitive-panel h2 {
+      margin-bottom: 10px;
+      font-size: 1.2rem;
+      color: #00ccff;
+    }
+    .cognitive-dominant {
+      border: 1px solid #224;
+      background: #0a0a14;
+      border-radius: 6px;
+      padding: 10px;
+      margin-bottom: 12px;
+      color: #bfefff;
+      font-size: 0.9rem;
+    }
+    .state-list {
+      list-style: none;
+      display: grid;
+      gap: 10px;
+      margin: 0;
+      padding: 0;
+    }
+    .state-item {
+      border: 1px solid #1f2f3a;
+      background: #070b0f;
+      border-radius: 6px;
+      padding: 10px;
+      font-size: 0.86rem;
+      color: #cfd8dc;
+    }
+    .state-item strong {
+      color: #8bd3ff;
+    }
   </style>
 </head>
 <body>
@@ -182,7 +262,23 @@
         </div>
       </div>
     </div>
+
+    <div class="contact-hub">
+      <h2>📲 Contact Hub</h2>
+      <p style="margin-bottom: 12px; color: #888; font-size: 0.9rem;">Configured communication methods for contacting the operator.</p>
+      <ul id="contactMethods" class="contact-list">
+        <li class="contact-empty">Loading communication methods...</li>
+      </ul>
+    </div>
     
+    <div class="cognitive-panel">
+      <h2>🧠 Cognitive Self-States</h2>
+      <div id="dominantState" class="cognitive-dominant">Loading dominant cognitive state...</div>
+      <ul id="cognitiveStates" class="state-list">
+        <li class="contact-empty">Loading cognitive intuition states...</li>
+      </ul>
+    </div>
+
     <div class="setup-info">
       <h3>📡 Webhook Setup</h3>
       <p>To connect GitHub events to this dashboard:</p>
@@ -214,10 +310,75 @@
       document.getElementById('divineGap').textContent = divineGap.toFixed(2);
       document.getElementById('last-update').textContent = 'Last update: ' + new Date().toLocaleTimeString();
     }
+
+    async function loadCognitiveStates() {
+      const listEl = document.getElementById('cognitiveStates');
+      const dominantEl = document.getElementById('dominantState');
+
+      try {
+        const response = await fetch('/api/cognitive-states');
+        if (!response.ok) throw new Error('Unable to load cognitive states');
+
+        const data = await response.json();
+        listEl.innerHTML = '';
+
+        dominantEl.textContent = data?.dominantState?.rationale || 'Dominant cognitive state is currently unavailable.';
+
+        if (!data.states || !data.states.length) {
+          listEl.innerHTML = '<li class="contact-empty">No cognitive states available.</li>';
+          return;
+        }
+
+        data.states.forEach((state) => {
+          const li = document.createElement('li');
+          li.className = 'state-item';
+          li.innerHTML = `
+            <div><strong>${state.label}</strong> · confidence ${(state.confidence * 100).toFixed(1)}% · energy ${state.energy}</div>
+            <div>Intent: ${state.intent}</div>
+            <div>Guardrail: ${state.biasGuard}</div>
+          `;
+          listEl.appendChild(li);
+        });
+      } catch (error) {
+        dominantEl.textContent = 'Cognitive state feed unavailable right now.';
+        listEl.innerHTML = '<li class="contact-empty">Could not load cognitive intuition states.</li>';
+      }
+    }
+
+    async function loadContactMethods() {
+      const listEl = document.getElementById('contactMethods');
+
+      try {
+        const response = await fetch('/api/contact-methods');
+        if (!response.ok) throw new Error('Unable to load contact methods');
+
+        const data = await response.json();
+        listEl.innerHTML = '';
+
+        if (!data.methods || !data.methods.length) {
+          listEl.innerHTML = '<li class="contact-empty">No communication methods configured. Set CONTACT_* variables in Vercel.</li>';
+          return;
+        }
+
+        data.methods.forEach((method) => {
+          const li = document.createElement('li');
+          li.className = 'contact-item';
+          li.innerHTML = `
+            <strong>${method.label}</strong>
+            <a href="${method.link}" target="_blank" rel="noopener noreferrer">${method.value}</a>
+          `;
+          listEl.appendChild(li);
+        });
+      } catch (error) {
+        listEl.innerHTML = '<li class="contact-empty">Contact hub unavailable right now.</li>';
+      }
+    }
     
     // Update every 5 seconds (demo mode)
     setInterval(updateMetrics, 5000);
     updateMetrics();
+    loadContactMethods();
+    loadCognitiveStates();
     
     // Add event to log
     function addEvent(event, message, type = 'info') {
