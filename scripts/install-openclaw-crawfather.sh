@@ -123,15 +123,20 @@ configure_openclaw(){
 try_install_crawfather_packages(){
   log "Attempting CrawFather package fallbacks"
 
+  local installed_from=""
+
   if npm view "$CRAWFATHER_NPM_PACKAGE" version >/dev/null 2>&1; then
     run "npm install -g \"$CRAWFATHER_NPM_PACKAGE\""
-    log "Installed CrawFather via npm package: $CRAWFATHER_NPM_PACKAGE"
-    return 0
+    installed_from="npm package: $CRAWFATHER_NPM_PACKAGE"
   fi
 
-  if python3 -m pip index versions "$CRAWFATHER_PIP_PACKAGE" >/dev/null 2>&1; then
+  if [ -z "$installed_from" ] && python3 -m pip index versions "$CRAWFATHER_PIP_PACKAGE" >/dev/null 2>&1; then
     run "python3 -m pip install \"$CRAWFATHER_PIP_PACKAGE\""
-    log "Installed CrawFather via pip package: $CRAWFATHER_PIP_PACKAGE"
+    installed_from="pip package: $CRAWFATHER_PIP_PACKAGE"
+  fi
+
+  if [ -n "$installed_from" ]; then
+    log "Installed CrawFather via $installed_from"
     return 0
   fi
 
@@ -153,11 +158,12 @@ install_crawfather(){
     if ! run "git clone \"$CRAWFATHER_REPO\" \"$CRAWFATHER_DIR\""; then
       warn "Unable to clone CrawFather from $CRAWFATHER_REPO (private repo or auth required)."
       warn "Set CRAWFATHER_REPO to an accessible URL or configure GitHub credentials, then rerun."
-      if ! try_install_crawfather_packages; then
-        warn "CrawFather installation failed: clone fallback and package fallbacks were unavailable."
-        return 1
+      if try_install_crawfather_packages; then
+        return 0
       fi
-      return 0
+
+      warn "CrawFather installation failed: clone fallback and package fallbacks were unavailable."
+      return 1
     fi
   else
     run "git -C \"$CRAWFATHER_DIR\" pull --ff-only" || warn "Unable to update existing CrawFather checkout."
