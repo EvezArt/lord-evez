@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>LORD Live Bridge</title>
+  <style>
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background: #0b1020;
+      color: #ecf2ff;
+      padding: 24px;
+    }
+    .wrap { max-width: 1100px; margin: 0 auto; }
+    h1 { margin: 0 0 8px; }
+    .sub { color: #9fb0d1; margin-bottom: 24px; }
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 16px;
+      margin-bottom: 24px;
+    }
+    .card {
+      background: #131a2e;
+      border: 1px solid #2b3658;
+      border-radius: 12px;
+      padding: 16px;
+    }
+    .label { color: #9fb0d1; font-size: 12px; text-transform: uppercase; margin-bottom: 8px; }
+    .value { font-size: 28px; font-weight: 700; }
+    .ok { color: #67e8a5; }
+    .warn { color: #ffd166; }
+    .err { color: #ff6b6b; }
+    .meta { margin-bottom: 20px; color: #9fb0d1; }
+    .events { display: grid; gap: 12px; }
+    .event {
+      background: #131a2e;
+      border: 1px solid #2b3658;
+      border-radius: 10px;
+      padding: 14px;
+    }
+    code {
+      background: #0a0f1e;
+      border-radius: 6px;
+      padding: 2px 6px;
+    }
+    .hint {
+      margin-top: 24px;
+      padding: 16px;
+      background: #131a2e;
+      border: 1px solid #2b3658;
+      border-radius: 12px;
+      color: #b9c6e3;
+    }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <h1>LORD Live Bridge</h1>
+    <div class="sub">Real data proxy for evez-os via <code>/api/live</code></div>
+    <div class="meta" id="meta">Loading...</div>
+
+    <div class="grid">
+      <div class="card"><div class="label">Spine Health</div><div class="value" id="spineHealth">-</div></div>
+      <div class="card"><div class="label">Agents</div><div class="value" id="agentCount">0</div></div>
+      <div class="card"><div class="label">Fire Events</div><div class="value" id="fireEventCount">0</div></div>
+      <div class="card"><div class="label">Isolation Signals</div><div class="value" id="isolationSignals">0</div></div>
+      <div class="card"><div class="label">Revenue USD</div><div class="value" id="revenueUsd">0</div></div>
+    </div>
+
+    <div class="events" id="events"></div>
+
+    <div class="hint">
+      Configure <code>EVEZ_OS_BASE</code> and optionally <code>EVEZ_API_KEY</code> in Vercel to make this page live.
+      Default polling interval: 5 seconds.
+    </div>
+  </div>
+
+  <script>
+    function setText(id, value, cls) {
+      const el = document.getElementById(id);
+      el.textContent = value;
+      el.className = 'value' + (cls ? ' ' + cls : '');
+    }
+
+    function renderEvents(events) {
+      const root = document.getElementById('events');
+      root.innerHTML = '';
+      if (!events || events.length === 0) {
+        root.innerHTML = '<div class="event">No live FIRE events yet.</div>';
+        return;
+      }
+      for (const evt of events.slice(0, 20)) {
+        const item = document.createElement('div');
+        item.className = 'event';
+        const name = evt.event_name || evt.type || evt.name || 'event';
+        const source = evt.source || evt.agent_id || 'unknown';
+        const ts = evt.ts || evt.timestamp || evt.created_at || '';
+        item.innerHTML = `<div><strong>${name}</strong> from ${source}</div><div style="color:#9fb0d1;margin-top:6px;">${ts}</div>`;
+        root.appendChild(item);
+      }
+    }
+
+    async function refresh() {
+      const res = await fetch('/api/live');
+      const data = await res.json();
+      document.getElementById('meta').textContent = data.configured
+        ? `Bridge OK · ${data.base} · ${new Date(data.fetchedAt).toLocaleString()}`
+        : `Bridge not configured · ${new Date(data.fetchedAt).toLocaleString()}`;
+
+      const healthClass = data.metrics.spineHealth === 'ok' ? 'ok' : data.configured ? 'warn' : 'err';
+      setText('spineHealth', data.metrics.spineHealth, healthClass);
+      setText('agentCount', String(data.metrics.agentCount));
+      setText('fireEventCount', String(data.metrics.fireEventCount));
+      setText('isolationSignals', String(data.metrics.isolationSignals));
+      setText('revenueUsd', String(data.metrics.revenueUsd));
+      renderEvents(data.events || []);
+    }
+
+    refresh().catch(console.error);
+    setInterval(() => refresh().catch(console.error), 5000);
+  </script>
+</body>
+</html>
