@@ -5,7 +5,7 @@ on:
     - cron: '0 */6 * * *'
   workflow_dispatch:
   push:
-    branches: [main]
+    branches: [main, master]
 
 jobs:
   keepalive:
@@ -32,4 +32,4 @@ jobs:
                 console.log('Re-enabled:', wf.name);
               }
             }
-            console.log(`Keepalive done. Re-enabled ${reEnabled}/${wfs.data.total_count}. ${new Date().toISOString()}`);
+            console.log(`Done. Re-enabled ${reEnabled} workflows. ${new Date().toISOString()}`);
